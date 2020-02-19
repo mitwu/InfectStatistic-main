@@ -115,7 +115,7 @@ public class InfectStatistic
 		}
 		return a;
 	}
-	public void read_text(String path) 
+	public void read_txt(String path) 
 	{
 		people_count=first_give();//将所有省市的的人数初始化
 		try 
@@ -214,6 +214,127 @@ public class InfectStatistic
 	
 	public void write_txt(String path)//用来将数据输出到txt文件中
 	{
-		
+		try
+		{
+			File afile=new File(path);
+			if(!afile.exists()){                //判断文件是否存在
+                afile.createNewFile();        //创建文件
+            }
+			OutputStreamWriter write1 = new OutputStreamWriter(
+                    new FileOutputStream(afile),"UTF-8");
+			 BufferedWriter write = new BufferedWriter(write1);
+			File file =new File(log);//日志文件存在的文件夹
+			String[] names= file.list();
+			for(String s:names)
+			{
+				if(s.compareTo(date)<=0||date==null)
+				{
+					read_txt(log+File.separator+s);
+				}
+			}
+			//对输出进行限定
+			if(province.length==0)//没有输入任何省份只输出全国
+			{
+				out(write,0);
+				write.newLine();//换行
+				String last_line="// 该文档并非真实数据，仅供测试使用";
+				write.write(last_line);
+			}
+			else
+			{
+				for(int i=0;i<province.length;i++)
+				{
+					int province_number;
+					for(int j=0;j<province1.length;j++)
+					{
+						if(province[i]==province1[j])//判断省份和对应索引
+						{
+							province_number=j;
+							out(write,province_number);
+							write.newLine();//换行
+						}
+					}
+				}
+				String last_line="// 该文档并非真实数据，仅供测试使用";
+				write.write(last_line);
+			}
+			 //关闭输出流
+			 write.flush();  
+	         write.close();
+		}
+		catch(Exception e) 
+		{	
+			System.out.print("读取文件出错");
+		}
+	}
+	public void out(BufferedWriter write,int province_number)//根据type类型进行输出
+	{
+		if(type.length!=0)
+		{
+			for(int i=0;i<type.length;i++)
+			{
+				if(type[i]=="ip")
+				{
+					try
+					{
+						String a="感染患者"+people_count[province_number][0]+"人 ";
+						write.write(a);
+					}
+					catch(Exception e)
+					{
+						System.out.print("输出产生错误");
+					}
+				}
+				else if(type[i]=="sp")
+				{
+					try
+					{
+						String a="疑似患者"+people_count[province_number][1]+"人 ";
+						write.write(a);
+					}
+					catch(Exception e)
+					{
+						System.out.print("输出产生错误");
+					}
+				}
+				else if(type[i]=="cure")
+				{
+					try
+					{
+						String a="治愈"+people_count[province_number][2]+"人 ";
+						write.write(a);
+					}
+					catch(Exception e)
+					{
+						System.out.print("输出产生错误");
+					}
+				}
+				else if(type[i]=="dead")
+				{
+					try
+					{
+						String a="死亡"+people_count[province_number][3]+"人";
+						write.write(a);
+					}
+					catch(Exception e)
+					{
+						System.out.print("输出产生错误");
+					}
+				}
+			}
+		}
+		else
+		{
+			try
+			{
+				String a="感染患者"+people_count[province_number][0]+"人 "+"疑似患者"+people_count[province_number][1]+"人 "+
+						"治愈"+people_count[province_number][2]+"人 "+"死亡"+people_count[province_number][3]+"人";
+				write.write(a);
+			}
+			catch(Exception e)
+			{
+				System.out.print("输出产生错误");
+			}
+		}
 	}
 }

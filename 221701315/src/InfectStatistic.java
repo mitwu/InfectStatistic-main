@@ -17,8 +17,7 @@ public class InfectStatistic
 	
 	public static void main(String[] args)//处理传入的参数
 	{
-		String[] str= {"-log","D:\\log","-date","2020-01-27","-type","ip","sp","cure","dead","-out","E:\\output\\output1.txt","-province","全国","福建","湖北"};
-		test(str);
+		test(args);
 		write_txt(out);
 	}
 	public static void test(String[] args)
@@ -253,7 +252,11 @@ public class InfectStatistic
 				String filename=s.getName();
 				int dot = filename.lastIndexOf('.');
 				filename=filename.substring(0, dot);
-				if((filename.compareTo(date))<=0||date==null)
+				if(date==null)
+				{
+					read_txt(s.getPath());
+				}
+				else if((filename.compareTo(date))<=0)
 				{
 					read_txt(s.getPath());
 				}
